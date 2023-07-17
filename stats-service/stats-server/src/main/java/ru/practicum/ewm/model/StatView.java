@@ -1,4 +1,7 @@
 package ru.practicum.ewm.model;
 
-public class StatView {
+public interface StatView {
+    String getApp();
+    String getUri();
+    Integer getHits();
 }
