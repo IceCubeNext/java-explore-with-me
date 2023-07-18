@@ -10,6 +10,9 @@
     </parent>
 
     <artifactId>stats-dto</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>Stats DTO</name>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

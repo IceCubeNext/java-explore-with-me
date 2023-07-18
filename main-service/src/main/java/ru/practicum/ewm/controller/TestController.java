@@ -2,6 +2,7 @@ package ru.practicum.ewm.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.StatClient;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TestController {
 
-    private final StatClient client;
+    private final StatClient client = new StatClient("http://localhost:9090", new RestTemplateBuilder());
 
     @GetMapping("/events/{id}")
     public ResponseEntity<Object> getEvent(@PathVariable Integer id) {
