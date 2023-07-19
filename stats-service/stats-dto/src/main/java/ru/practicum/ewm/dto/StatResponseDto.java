@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StatResponseDto {
-    String app;
-    String uri;
-    Integer hits;
+    private String app;
+    private String uri;
+    private Integer hits;
 }

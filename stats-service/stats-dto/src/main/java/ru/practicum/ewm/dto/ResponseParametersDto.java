@@ -15,9 +15,9 @@ import javax.validation.constraints.NotBlank;
 @StartBeforeEndDateValid
 public class ResponseParametersDto {
     @NotBlank
-    String start;
+    private String start;
     @NotBlank
-    String end;
-    String uris;
-    Boolean unique;
+    private String end;
+    private String uris;
+    private Boolean unique;
 }

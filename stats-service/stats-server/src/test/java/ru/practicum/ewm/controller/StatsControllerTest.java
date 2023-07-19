@@ -38,7 +38,7 @@ class StatsControllerTest {
     private StatRequestDto requestDto;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         requestDto = new StatRequestDto();
         requestDto.setApp("app");
         requestDto.setUri("event/1");
