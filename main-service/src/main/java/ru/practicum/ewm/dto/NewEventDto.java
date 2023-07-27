@@ -1,19 +1,19 @@
 package ru.practicum.ewm.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import ru.practicum.ewm.exceptions.EventDateValid;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class NewEventDto {
     @NotBlank
     @Size(min = 3, max = 120, message = "{title size should be from 20 to 7000 letters}")
@@ -28,7 +28,8 @@ public class NewEventDto {
     private Integer category;
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String eventDate;
+    @EventDateValid
+    private LocalDateTime eventDate;
     @NotNull
     private Location location;
     private Boolean paid;

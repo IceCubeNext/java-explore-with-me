@@ -1,18 +1,18 @@
 package ru.practicum.ewm.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import ru.practicum.ewm.exceptions.EventDateValid;
 import ru.practicum.ewm.model.enums.StateAdminAction;
 
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class UpdateEventAdminRequest {
     @Size(min = 3, max = 120, message = "{title size should be from 20 to 7000 letters}")
     private String title;
@@ -20,12 +20,13 @@ public class UpdateEventAdminRequest {
     private String description;
     @Size(min = 20, max = 2000, message = "{annotation size should be from 20 to 2000 letters}")
     private String annotation;
+    @EventDateValid
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String eventDate;
+    private LocalDateTime eventDate;
     private Integer category;
     private Location location;
     private Boolean paid;
     private Integer participantLimit;
     private Boolean requestModeration;
-    private StateAdminAction stateAdminAction;
+    private StateAdminAction stateAction;
 }

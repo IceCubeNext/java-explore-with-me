@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.dto.NewUserRequest;
 import ru.practicum.ewm.dto.UserDto;
-import ru.practicum.ewm.dto.UserShortDto;
 import ru.practicum.ewm.exceptions.NotFoundException;
 import ru.practicum.ewm.mapper.UserMapper;
 import ru.practicum.ewm.model.User;
@@ -22,14 +22,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
+    public User findById(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("User with id=%d was not found", userId)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getUsers(List<Integer> ids, Integer from, Integer size) {
         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
+        if (ids == null || ids.isEmpty()) {
+            return userRepository.findAll(page).map(mapper::toUserDto).getContent();
+        }
         return userRepository.findAllByIdIn(ids, page).map(mapper::toUserDto).getContent();
     }
 
     @Override
     @Transactional
-    public UserDto addUser(UserShortDto userShortDto) {
+    public UserDto addUser(NewUserRequest userShortDto) {
         User user = mapper.toUser(userShortDto);
         return mapper.toUserDto(userRepository.save(user));
     }
@@ -37,8 +47,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(Integer userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(String.format("User with id=%d not found", userId)));
-        userRepository.delete(user);
+        findById(userId);
+        userRepository.deleteById(userId);
     }
 }

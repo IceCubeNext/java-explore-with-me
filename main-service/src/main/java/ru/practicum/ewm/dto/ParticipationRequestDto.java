@@ -1,21 +1,26 @@
 package ru.practicum.ewm.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import ru.practicum.ewm.model.enums.State;
+import lombok.*;
+import ru.practicum.ewm.model.enums.Status;
+
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@Builder(toBuilder = true)
 public class ParticipationRequestDto {
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private String created;
-    private Integer event;
     private Integer id;
+    @NotNull
+    private Integer event;
+    @NotNull
     private Integer requester;
-    private State status;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime created;
+    @NotNull
+    private Status status;
 }

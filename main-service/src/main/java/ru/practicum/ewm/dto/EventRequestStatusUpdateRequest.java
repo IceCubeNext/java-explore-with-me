@@ -1,18 +1,19 @@
 package ru.practicum.ewm.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.ewm.model.enums.Status;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class EventRequestStatusUpdateRequest {
-    private List<Integer> requestsIds;
+    @NotNull
+    private List<Integer> requestIds;
+    @NotNull
     private Status status;
 }
