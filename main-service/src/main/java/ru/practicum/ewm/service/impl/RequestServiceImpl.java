@@ -35,7 +35,8 @@ public class RequestServiceImpl implements RequestService {
     @Transactional(readOnly = true)
     public List<ParticipationRequestDto> getUserRequests(Integer userId) {
         userService.findById(userId);
-        return repository.findAllByRequesterId(userId).stream().map(mapper::toParticipationRequestDto).collect(Collectors.toList());
+        return repository.findAllByRequesterId(userId).stream().map(mapper::toParticipationRequestDto)
+                .collect(Collectors.toList());
     }
 
     @Override

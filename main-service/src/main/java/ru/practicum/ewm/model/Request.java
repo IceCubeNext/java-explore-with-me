@@ -24,7 +24,9 @@ public class Request {
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private User requester;
+    @Column
     @Enumerated(EnumType.STRING)
     private Status status;
+    @Column
     private LocalDateTime created;
 }

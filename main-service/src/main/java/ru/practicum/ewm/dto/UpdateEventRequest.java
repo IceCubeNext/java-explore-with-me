@@ -3,7 +3,7 @@ package ru.practicum.ewm.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.ewm.exceptions.EventDateValid;
-import ru.practicum.ewm.model.enums.StateUserAction;
+import ru.practicum.ewm.model.enums.StateAction;
 
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UpdateEventUserRequest {
+public class UpdateEventRequest {
     @Size(min = 3, max = 120, message = "{title size should be from 20 to 7000 letters}")
     private String title;
     @Size(min = 20, max = 7000, message = "{description size should be from 20 to 7000 letters}")
@@ -28,5 +28,5 @@ public class UpdateEventUserRequest {
     private Boolean paid;
     private Integer participantLimit;
     private Boolean requestModeration;
-    private StateUserAction stateAction;
+    private StateAction stateAction;
 }

@@ -49,7 +49,7 @@ class StatsControllerTest {
 
     @Test
     public void addNormalHit() throws Exception {
-        postHit(requestDto).andExpect(status().isOk());
+        postHit(requestDto).andExpect(status().isCreated());
     }
 
     @Test
@@ -77,9 +77,9 @@ class StatsControllerTest {
         StatRequestDto request2 = new StatRequestDto("app", "event/1", "192.168.0.1", LocalDateTime.now().plusHours(1));
         StatRequestDto request3 = new StatRequestDto("app", "event/1", "192.168.0.1", LocalDateTime.now().plusHours(2));
 
-        postHit(request1).andExpect(status().isOk());
-        postHit(request2).andExpect(status().isOk());
-        postHit(request3).andExpect(status().isOk());
+        postHit(request1).andExpect(status().isCreated());
+        postHit(request2).andExpect(status().isCreated());
+        postHit(request3).andExpect(status().isCreated());
 
         getStat(new ResponseParametersDto(
                         LocalDateTime.now().minusHours(1).format(Constants.TIME_FORMATTER),
@@ -99,9 +99,9 @@ class StatsControllerTest {
         StatRequestDto request2 = new StatRequestDto("app", "event/1", "192.168.0.1", LocalDateTime.now().plusHours(1));
         StatRequestDto request3 = new StatRequestDto("app", "event/1", "192.168.0.1", LocalDateTime.now().plusHours(2));
 
-        postHit(request1).andExpect(status().isOk());
-        postHit(request2).andExpect(status().isOk());
-        postHit(request3).andExpect(status().isOk());
+        postHit(request1).andExpect(status().isCreated());
+        postHit(request2).andExpect(status().isCreated());
+        postHit(request3).andExpect(status().isCreated());
 
         getStat(new ResponseParametersDto(
                         LocalDateTime.now().minusHours(1).format(Constants.TIME_FORMATTER),

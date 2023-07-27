@@ -18,7 +18,6 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
-    private final EventRepository eventRepository;
 
     @GetMapping("/categories")
     public List<CategoryDto> getCategories(@RequestParam(defaultValue = "0") Integer from,
@@ -50,9 +49,6 @@ public class CategoryController {
     @DeleteMapping("/admin/categories/{catId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable Integer catId) {
-        if (eventRepository.findFirstByCategoryId(catId) != null) {
-            throw new ConflictException("The category is not empty");
-        }
         log.info("Delete category with id={}", catId);
         categoryService.deleteCategory(catId);
     }

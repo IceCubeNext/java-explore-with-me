@@ -7,7 +7,7 @@ import ru.practicum.ewm.model.Request;
 import ru.practicum.ewm.service.EventService;
 import ru.practicum.ewm.service.UserService;
 
-@Mapper(componentModel = "spring", uses = { EventService.class, UserService.class })
+@Mapper(componentModel = "spring", uses = {EventService.class, UserService.class})
 public interface RequestMapper {
     @Mapping(source = "event.id", target = "event")
     @Mapping(source = "requester.id", target = "requester")

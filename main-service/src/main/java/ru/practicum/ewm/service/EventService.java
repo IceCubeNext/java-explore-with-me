@@ -20,7 +20,9 @@ public interface EventService {
 
     EventFullDto addEvent(Integer userId, NewEventDto eventDto);
 
-    EventFullDto updateEvent(Integer userId, Integer eventId, UpdateEventUserRequest eventDto);
+    EventFullDto updateEvent(Integer userId, Integer eventId, UpdateEventRequest eventDto);
 
-    EventFullDto updateEventByAdmin(Integer eventId, UpdateEventAdminRequest eventDto);
+    EventFullDto updateEventByAdmin(Integer eventId, UpdateEventRequest eventDto);
+
+    List<Event> findEventsByIdIn(List<Integer> ids);
 }

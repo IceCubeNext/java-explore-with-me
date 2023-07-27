@@ -89,14 +89,14 @@ public class EventController {
     @PatchMapping("/users/{userId}/events/{eventId}")
     public EventFullDto updateEvent(@PathVariable Integer userId,
                                     @PathVariable Integer eventId,
-                                    @Valid @RequestBody UpdateEventUserRequest eventDto) {
+                                    @Valid @RequestBody UpdateEventRequest eventDto) {
         log.info("Patch event with id={} and user id={}, event={}", eventId, userId, eventDto);
         return eventService.updateEvent(userId, eventId, eventDto);
     }
 
     @PatchMapping("/admin/events/{eventId}")
     public EventFullDto updateEventByAdmin(@PathVariable Integer eventId,
-                                           @Valid @RequestBody UpdateEventAdminRequest request) {
+                                           @Valid @RequestBody UpdateEventRequest request) {
         log.info("Patch event with id={} event request={}", eventId, request);
         return eventService.updateEventByAdmin(eventId, request);
     }

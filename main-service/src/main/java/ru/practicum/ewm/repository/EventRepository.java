@@ -15,5 +15,6 @@ public interface EventRepository extends JpaRepository<Event, Integer>, EventDao
 
     Page<Event> findAllByInitiatorId(Integer id, Pageable page);
 
-    Event findFirstByCategoryId(Integer catId);
+    List<Event> findAllByCategoryId(Integer catId);
+
 }

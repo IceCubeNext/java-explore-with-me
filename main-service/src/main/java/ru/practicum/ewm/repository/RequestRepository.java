@@ -10,9 +10,14 @@ import java.util.List;
 
 public interface RequestRepository extends JpaRepository<Request, Integer> {
     List<Request> findAllByIdIn(List<Integer> ids);
+
     List<Request> findAllByRequesterId(Integer userId);
+
     Page<Request> findAllByEventIdAndEventInitiatorId(Integer eventId, Integer userId, Pageable page);
+
     Request findByRequesterIdAndEventId(Integer userId, Integer eventId);
+
     Integer countAllByEventIdAndStatus(Integer id, Status status);
+
     List<Request> findAllByEventIdInAndStatus(List<Integer> ids, Status status);
 }

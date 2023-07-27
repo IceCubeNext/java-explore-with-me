@@ -15,8 +15,8 @@ import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.EventCompilation;
 import ru.practicum.ewm.repository.CompilationRepository;
 import ru.practicum.ewm.repository.EventCompilationRepository;
-import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.service.CompilationService;
+import ru.practicum.ewm.service.EventService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,10 +29,10 @@ import static java.util.stream.Collectors.toList;
 @Service
 @RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
-    private final CompilationRepository compilationRepository;
+    private final CompilationRepository repository;
+    private final CompilationMapper mapper;
     private final EventCompilationRepository eventCompilationRepository;
-    private final EventRepository eventRepository;
-    private final CompilationMapper compilationMapper;
+    private final EventService eventService;
     private final EventMapper eventMapper;
 
     @Override
@@ -42,12 +42,13 @@ public class CompilationServiceImpl implements CompilationService {
         List<Compilation> compilations;
 
         if (pinned != null) {
-            compilations = compilationRepository.findAllByPinned(pinned, page).getContent();
+            compilations = repository.findAllByPinned(pinned, page).getContent();
         } else {
-            compilations = compilationRepository.findAll(page).getContent();
+            compilations = repository.findAll(page).getContent();
         }
 
-        Map<Compilation, List<Event>> compilationEvents = eventCompilationRepository.findAllByCompilationIn(compilations)
+        Map<Compilation, List<Event>> compilationEvents = eventCompilationRepository
+                .findAllByCompilationIn(compilations)
                 .stream()
                 .collect(Collectors.groupingBy(
                                 EventCompilation::getCompilation,
@@ -58,9 +59,11 @@ public class CompilationServiceImpl implements CompilationService {
         List<CompilationDto> compilationDtoList = new ArrayList<>();
 
         for (Compilation compilation : compilations) {
-            CompilationDto compilationDto = compilationMapper.toCompilationDto(compilation);
+            CompilationDto compilationDto = mapper.toCompilationDto(compilation);
             if (compilationEvents.containsKey(compilation)) {
-                compilationDto.setEvents(compilationEvents.get(compilation).stream().map(eventMapper::toEventShortDto).collect(toList()));
+                compilationDto.setEvents(compilationEvents.get(compilation).stream()
+                        .map(eventMapper::toEventShortDto)
+                        .collect(toList()));
             } else {
                 compilationDto.setEvents(Collections.emptyList());
             }
@@ -72,7 +75,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional(readOnly = true)
     public CompilationDto getCompilationById(Integer id) {
-        CompilationDto compilationDto = compilationMapper.toCompilationDto(getCompilation(id));
+        CompilationDto compilationDto = mapper.toCompilationDto(getCompilation(id));
         return setEvents(compilationDto, id);
     }
 
@@ -82,11 +85,11 @@ public class CompilationServiceImpl implements CompilationService {
         if (compilationDto.getPinned() == null) {
             compilationDto.setPinned(false);
         }
-        Compilation compilation = compilationRepository.save(compilationMapper.toCompilation(compilationDto));
+        Compilation compilation = repository.save(mapper.toCompilation(compilationDto));
         if (compilationDto.getEvents() != null && !compilationDto.getEvents().isEmpty()) {
             updateEventCompilations(compilation, compilationDto.getEvents());
         }
-        CompilationDto result = compilationMapper.toCompilationDto(compilation);
+        CompilationDto result = mapper.toCompilationDto(compilation);
         return setEvents(result, compilation.getId());
     }
 
@@ -96,7 +99,7 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = getCompilation(id);
         if (StringUtils.hasText(compilationDto.getTitle()) && !compilationDto.getTitle().equals(compilation.getTitle())) {
             if (compilationDto.getTitle().length() > 50) {
-                throw new IllegalArgumentException("compilation title size should be from 1 to 50 letters");
+                throw new IllegalArgumentException("Compilation title size should be from 1 to 50 letters");
             }
             compilation.setTitle(compilationDto.getTitle());
         }
@@ -107,7 +110,7 @@ public class CompilationServiceImpl implements CompilationService {
             eventCompilationRepository.deleteAllByCompilation(compilation);
             updateEventCompilations(compilation, compilationDto.getEvents());
         }
-        CompilationDto result = compilationMapper.toCompilationDto(compilation);
+        CompilationDto result = mapper.toCompilationDto(compilation);
         return setEvents(result, compilation.getId());
     }
 
@@ -115,11 +118,11 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     public void deleteCompilation(Integer id) {
         Compilation compilation = getCompilation(id);
-        compilationRepository.delete(compilation);
+        repository.delete(compilation);
     }
 
     private void updateEventCompilations(Compilation compilation, List<Integer> eventIds) {
-        List<Event> events = eventRepository.findAllByIdIn(eventIds);
+        List<Event> events = eventService.findEventsByIdIn(eventIds);
         List<EventCompilation> eventCompilations = new ArrayList<>();
         for (Event event : events) {
             EventCompilation ec = new EventCompilation();
@@ -139,7 +142,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     private Compilation getCompilation(Integer id) {
-        return compilationRepository.findById(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Compilation with id=%d not found", id)));
     }
 }
