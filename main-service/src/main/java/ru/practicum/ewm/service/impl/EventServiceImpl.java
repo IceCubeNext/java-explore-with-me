@@ -1,10 +1,12 @@
 package ru.practicum.ewm.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import ru.practicum.ewm.StatClient;
 import ru.practicum.ewm.dto.*;
 import ru.practicum.ewm.exceptions.ConflictException;
 import ru.practicum.ewm.exceptions.NotFoundException;
@@ -35,6 +37,7 @@ public class EventServiceImpl implements EventService {
     private final RequestRepository requestRepository;
     private final EventMapper mapper;
     private final CategoryMapper categoryMapper;
+    private final StatClient statClient = new StatClient("http://localhost:9090", new RestTemplateBuilder());
 
     @Override
     @Transactional(readOnly = true)
@@ -74,8 +77,9 @@ public class EventServiceImpl implements EventService {
             } else {
                 event.setConfirmedRequests(0);
             }
+            event.setViews(event.getViews() + 1);
         }
-
+        statClient.addHit(new StatRequestDto("ewm-main-service",  "/events", parameters.getIp(), LocalDateTime.now()));
         if (Sort.EVENT_DATE.toString().equals(parameters.getSort())) {
             return eventShortDtoList.stream().sorted(Comparator.comparing(EventShortDto::getEventDate)).collect(toList());
         } else {
@@ -85,12 +89,13 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public EventFullDto getEventById(Integer id) {
+    public EventFullDto getEventById(Integer id, String ip, String uri) {
         Event event = findById(id);
         if (event.getState() != Status.PUBLISHED) {
             throw new NotFoundException(String.format("Event with id=%d was not found", id));
         }
         event.setViews(event.getViews() + 1);
+        statClient.addHit(new StatRequestDto("ewm-main-service", uri, ip, LocalDateTime.now()));
         EventFullDto eventFullDto = mapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(requestRepository.countAllByEventIdAndStatus(id, Status.CONFIRMED));
         return eventFullDto;

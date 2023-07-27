@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class SearchEventParameters {
+    private String ip;
     private String text;
     private List<Integer> categories;
     private Boolean paid;

@@ -15,7 +15,6 @@ import ru.practicum.ewm.repository.RequestRepository;
 import ru.practicum.ewm.service.EventService;
 import ru.practicum.ewm.service.RequestService;
 import ru.practicum.ewm.service.UserService;
-import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.dto.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.dto.ParticipationRequestDto;
@@ -95,7 +94,7 @@ public class RequestServiceImpl implements RequestService {
     @Transactional
     public EventRequestStatusUpdateResult updateParticipationRequestByUser(Integer userId, Integer eventId, EventRequestStatusUpdateRequest requestUpdate) {
         userService.findById(userId);
-        EventFullDto event = eventService.getEventById(eventId);
+        Event event = eventService.findById(eventId);
 
         if (!List.of(Status.CONFIRMED, Status.REJECTED).contains(requestUpdate.getStatus())) {
             throw new IllegalArgumentException("Wrong status to confirm or reject requests " + requestUpdate.getStatus());

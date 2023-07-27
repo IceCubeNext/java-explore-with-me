@@ -8,6 +8,7 @@ import ru.practicum.ewm.dto.*;
 import ru.practicum.ewm.model.enums.Status;
 import ru.practicum.ewm.service.EventService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -26,17 +27,26 @@ public class EventController {
                                          @RequestParam(required = false) Boolean onlyAvailable,
                                          @RequestParam(required = false) String sort,
                                          @RequestParam(defaultValue = "0") Integer from,
-                                         @RequestParam(defaultValue = "10") Integer size) {
-        SearchEventParameters parameters = new SearchEventParameters(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort);
+                                         @RequestParam(defaultValue = "10") Integer size,
+                                         HttpServletRequest request) {
+        SearchEventParameters parameters = new SearchEventParameters(
+                request.getRemoteAddr(),
+                text,
+                categories,
+                paid,
+                rangeStart,
+                rangeEnd,
+                onlyAvailable,
+                sort);
         log.info("Get events text={}, categories={}, paid={}, start={}, end={}, available={}, sort={}, from={}, size={}"
                 , text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         return eventService.getEvents(parameters, from, size);
     }
 
     @GetMapping("/events/{id}")
-    public EventFullDto getEventById(@PathVariable Integer id) {
-        log.info("Get event with id={}", id);
-        return eventService.getEventById(id);
+    public EventFullDto getEventById(@PathVariable Integer id, HttpServletRequest request) {
+        log.info("Get event with id={}. Ip={}, URI={}", id, request.getRemoteAddr(), request.getRequestURI());
+        return eventService.getEventById(id, request.getRemoteAddr(), request.getRequestURI());
     }
 
     @GetMapping("/users/{userId}/events")

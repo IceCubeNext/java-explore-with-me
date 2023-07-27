@@ -8,7 +8,7 @@ import java.util.List;
 public interface EventService {
     List<EventShortDto> getEvents(SearchEventParameters parameters, Integer from, Integer size);
 
-    EventFullDto getEventById(Integer id);
+    EventFullDto getEventById(Integer id, String ip, String uri);
 
     Event findById(Integer id);
 
