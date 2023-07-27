@@ -6,8 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CategoryDto;
 import ru.practicum.ewm.dto.NewCategoryDto;
-import ru.practicum.ewm.exceptions.ConflictException;
-import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.service.CategoryService;
 
 import javax.validation.Valid;

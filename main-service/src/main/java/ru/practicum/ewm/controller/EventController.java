@@ -38,8 +38,7 @@ public class EventController {
                 rangeEnd,
                 onlyAvailable,
                 sort);
-        log.info("Get events text={}, categories={}, paid={}, start={}, end={}, available={}, sort={}, from={}, size={}"
-                , text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        log.info("Get events text={}, categories={}, paid={}, start={}, end={}, available={}, sort={}, from={}, size={}", text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         return eventService.getEvents(parameters, from, size);
     }
 
@@ -73,8 +72,7 @@ public class EventController {
                                                @RequestParam(defaultValue = "0") Integer from,
                                                @RequestParam(defaultValue = "10") Integer size) {
         SearchEventParametersAdmin parameters = new SearchEventParametersAdmin(users, states, categories, rangeStart, rangeEnd);
-        log.info("Get events with ids={}, states={}, categories={}, start={}, end={}, from={}, size={} by admin"
-                , users, states, categories, rangeStart, rangeEnd, from, size);
+        log.info("Get events with ids={}, states={}, categories={}, start={}, end={}, from={}, size={} by admin", users, states, categories, rangeStart, rangeEnd, from, size);
         return eventService.getEventsByAdmin(parameters, from, size);
     }
 

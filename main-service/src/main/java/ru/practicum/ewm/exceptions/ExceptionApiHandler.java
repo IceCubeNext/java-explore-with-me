@@ -38,7 +38,7 @@ public class ExceptionApiHandler {
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<ApiError> SQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException exception) {
+    public ResponseEntity<ApiError> sqlIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException exception) {
         log.error(exception.getMessage());
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
