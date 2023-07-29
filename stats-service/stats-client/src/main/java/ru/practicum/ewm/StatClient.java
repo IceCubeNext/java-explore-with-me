@@ -1,8 +1,10 @@
 package ru.practicum.ewm;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.ewm.dto.ResponseParametersDto;
 import ru.practicum.ewm.dto.StatRequestDto;
@@ -10,11 +12,11 @@ import ru.practicum.ewm.dto.StatRequestDto;
 import javax.validation.Valid;
 import java.util.Map;
 
+@Component
 public class StatClient extends BaseClient {
-
-    public StatClient(String serverUrl, RestTemplateBuilder builder) {
+    public StatClient(@Value("${stat.server.url}") String serverUrl) {
         super(
-                builder
+                new RestTemplateBuilder()
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
                         .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                         .build()

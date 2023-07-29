@@ -28,29 +28,27 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<StatResponseDto> getStat(String start, String end, List<String> uris, Boolean unique) {
+    public List<StatResponseDto> getStat(String startStat, String endSstat, List<String> uris, Boolean unique) {
         List<StatView> hits;
+
+        LocalDateTime start = LocalDateTime.parse(startStat, Constants.TIME_FORMATTER);
+        LocalDateTime end = LocalDateTime.parse(endSstat, Constants.TIME_FORMATTER);
+
+        if (!start.isBefore(end)) {
+            throw new IllegalArgumentException("start parameter should be before end");
+        }
+
         if (uris.isEmpty()) {
             if (unique) {
-                hits = statRepository.findAllByTimestampBetweenUniqueIp(
-                        LocalDateTime.parse(start, Constants.TIME_FORMATTER),
-                        LocalDateTime.parse(end, Constants.TIME_FORMATTER));
+                hits = statRepository.findAllByTimestampBetweenUniqueIp(start, end);
             } else {
-                hits = statRepository.findAllByTimestampBetween(
-                        LocalDateTime.parse(start, Constants.TIME_FORMATTER),
-                        LocalDateTime.parse(end, Constants.TIME_FORMATTER));
+                hits = statRepository.findAllByTimestampBetween(start, end);
             }
         } else {
             if (unique) {
-                hits = statRepository.findAllByTimestampBetweenAndUriInUniqueIp(
-                        LocalDateTime.parse(start, Constants.TIME_FORMATTER),
-                        LocalDateTime.parse(end, Constants.TIME_FORMATTER),
-                        uris);
+                hits = statRepository.findAllByTimestampBetweenAndUriInUniqueIp(start, end, uris);
             } else {
-                hits = statRepository.findAllByTimestampBetweenAndUriIn(
-                        LocalDateTime.parse(start, Constants.TIME_FORMATTER),
-                        LocalDateTime.parse(end, Constants.TIME_FORMATTER),
-                        uris);
+                hits = statRepository.findAllByTimestampBetweenAndUriIn(start, end, uris);
             }
         }
         return hits.stream().map(StatMapper::mapToStatResponse).collect(Collectors.toList());

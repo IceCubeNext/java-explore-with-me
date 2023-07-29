@@ -137,6 +137,45 @@ public class ExceptionApiHandler {
                         .build());
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiError> notFoundException(NotFoundException exception) {
+        log.error(exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiError.builder()
+                        .status(HttpStatus.NOT_FOUND)
+                        .reason("The required object was not found.")
+                        .message(exception.getMessage())
+                        .timestamp(LocalDateTime.now().format(Constants.TIME_FORMATTER))
+                        .build());
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ApiError> conflictException(ConflictException exception) {
+        log.error(exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiError.builder()
+                        .status(HttpStatus.CONFLICT)
+                        .reason("Conflict occurred during processing request.")
+                        .message(exception.getMessage())
+                        .timestamp(LocalDateTime.now().format(Constants.TIME_FORMATTER))
+                        .build());
+    }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ApiError> userAlreadyExistsException(AlreadyExistsException exception) {
+        log.error(exception.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiError.builder()
+                        .status(HttpStatus.CONFLICT)
+                        .reason("The required object already exists.")
+                        .message(exception.getMessage())
+                        .timestamp(LocalDateTime.now().format(Constants.TIME_FORMATTER))
+                        .build());
+    }
+
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ApiError> throwableException(Throwable exception) {
         StringWriter sw = new StringWriter();
