@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS comment;
 DROP TABLE IF EXISTS request;
 DROP TABLE IF EXISTS event_compilation;
 DROP TABLE IF EXISTS compilation;
@@ -87,6 +88,23 @@ CREATE TABLE IF NOT EXISTS request
             REFERENCES users (id)
             ON DELETE CASCADE,
     CONSTRAINT fk_request_event
+        FOREIGN KEY (event_id)
+            REFERENCES event (id)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS comment
+(
+    id       BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+    user_id  BIGINT                              NOT NULL,
+    event_id BIGINT                              NOT NULL,
+    text     VARCHAR(1000)                       NOT NULL,
+    CONSTRAINT pk_comment PRIMARY KEY (id),
+    CONSTRAINT fk_comment_user
+        FOREIGN KEY (user_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_comment_event
         FOREIGN KEY (event_id)
             REFERENCES event (id)
             ON DELETE CASCADE
