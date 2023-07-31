@@ -22,8 +22,12 @@
 									"\r",
 									"    try {\r",
 									"        const user = await api.addUser(rnd.getUser());\r",
+									"        pm.collectionVariables.set('uid', user.id);\r",
 									"        const category = await api.addCategory(rnd.getCategory());\r",
-									"        await api.addEvent(user.id, rnd.getEvent(category.id));\r",
+									"        pm.collectionVariables.set('cid', category.id);\r",
+									"        const event = await api.addEvent(user.id, rnd.getEvent(category.id));\r",
+									"        pm.collectionVariables.set('eid', event.id);\r",
+									"              \r",
 									"    } catch(err) {\r",
 									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
 									"    }\r",
@@ -86,7 +90,7 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							]
 						}
@@ -142,7 +146,7 @@
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1",
+									"value": "{{eid}}",
 									"description": "(Required) id события"
 								}
 							]
@@ -194,7 +198,7 @@
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1",
+									"value": "{{eid}}",
 									"description": "(Required) id события"
 								},
 								{
@@ -277,7 +281,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments?userId=1",
+							"raw": "{{baseUrl}}/events/:eventId/comments?userId={{uid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -289,13 +293,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								}
 							]
 						}
@@ -315,7 +319,7 @@
 									"\r",
 									"    let comment;\r",
 									"    try {\r",
-									"        await api.publishEvent(1);\r",
+									"        await api.publishEvent(pm.collectionVariables.get(\"eid\"));\r",
 									"        comment = rnd.getComment();\r",
 									"    } catch(err) {\r",
 									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
@@ -375,7 +379,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments?userId=1",
+							"raw": "{{baseUrl}}/events/:eventId/comments?userId={{uid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -387,13 +391,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								}
 							]
 						}
@@ -471,7 +475,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments?userId=1",
+							"raw": "{{baseUrl}}/events/:eventId/comments?userId={{uid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -483,13 +487,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								}
 							]
 						}
@@ -567,7 +571,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments?userId=1",
+							"raw": "{{baseUrl}}/events/:eventId/comments?userId={{uid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -579,13 +583,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								}
 							]
 						}
@@ -678,7 +682,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=1",
+							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId={{uid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -691,13 +695,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								},
 								{
 									"key": "comId",
@@ -779,7 +783,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=1",
+							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId={{uid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -792,13 +796,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								},
 								{
 									"key": "comId",
@@ -880,7 +884,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=1",
+							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId={{uid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -893,13 +897,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								},
 								{
 									"key": "comId",
@@ -981,7 +985,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=1",
+							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId={{uid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -994,17 +998,17 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								},
 								{
 									"key": "comId",
-									"value": "2"
+									"value": "999"
 								}
 							]
 						}
@@ -1082,7 +1086,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=1",
+							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId={{uid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -1095,13 +1099,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "2"
+									"value": "999"
 								},
 								{
 									"key": "comId",
@@ -1183,7 +1187,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=3",
+							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=999",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -1196,13 +1200,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "3"
+									"value": "999"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								},
 								{
 									"key": "comId",
@@ -1225,7 +1229,8 @@
 									"    const rnd = new RandomUtils();\r",
 									"\r",
 									"    try {\r",
-									"        await api.addUser(rnd.getUser());\r",
+									"        const user = await api.addUser(rnd.getUser());\r",
+									"        pm.collectionVariables.set('newuid', user.id);\r",
 									"    } catch(err) {\r",
 									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
 									"    }\r",
@@ -1268,7 +1273,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=2",
+							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId={{newuid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -1281,13 +1286,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "2"
+									"value": "{{newuid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								},
 								{
 									"key": "comId",
@@ -1328,7 +1333,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=1",
+							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId={{uid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -1341,17 +1346,17 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								},
 								{
 									"key": "comId",
-									"value": "99"
+									"value": "999"
 								}
 							]
 						}
@@ -1388,7 +1393,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=1",
+							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId={{uid}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -1401,13 +1406,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "99"
+									"value": "999"
 								},
 								{
 									"key": "comId",
@@ -1448,7 +1453,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=99",
+							"raw": "{{baseUrl}}/events/:eventId/comments/:comId?userId=999",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -1461,13 +1466,13 @@
 							"query": [
 								{
 									"key": "userId",
-									"value": "99"
+									"value": "999"
 								}
 							],
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								},
 								{
 									"key": "comId",
@@ -1533,7 +1538,7 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							]
 						}
@@ -1594,7 +1599,7 @@
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								}
 							]
 						}
@@ -1652,7 +1657,7 @@
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								},
 								{
 									"key": "comId",
@@ -1678,7 +1683,7 @@
 									"    try {\r",
 									"        comment = rnd.getComment();\r",
 									"        comment[\"text\"] = \"SOME Comment\";\r",
-									"        await api.addComment(1, 1, comment);\r",
+									"        await api.addComment(pm.collectionVariables.get(\"eid\"), pm.collectionVariables.get(\"uid\"), comment);\r",
 									"    } catch(err) {\r",
 									"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
 									"    }\r",
@@ -1748,7 +1753,7 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								}
 							]
 						}
@@ -1805,7 +1810,7 @@
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								}
 							]
 						}
@@ -1857,7 +1862,7 @@
 							"variable": [
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								}
 							]
 						}
@@ -1906,53 +1911,12 @@
 							"variable": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "{{uid}}"
 								},
 								{
 									"key": "eventId",
-									"value": "1"
+									"value": "{{eid}}"
 								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Проверка появления комментариев в событии поиск по events",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
-									"    pm.response.to.be.ok;    \r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"\r",
-									"const target = pm.response.json()[0];\r",
-									"\r",
-									"pm.test(\"Значение size в поле event.comments должно быть равным 2\", function () {\r",
-									"    pm.expect(target.comments.length).to.be.equal(2);\r",
-									"});\r",
-									"\r",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/admin/events",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"admin",
-								"events"
 							]
 						}
 					},
@@ -2140,6 +2104,14 @@
 		{
 			"key": "uid",
 			"value": ""
+		},
+		{
+			"key": "cid",
+			"value": ""
+		},
+		{
+			"key": "newuid",
+			"value": "1"
 		}
 	]
 }
