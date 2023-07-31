@@ -42,8 +42,6 @@
 
 [открыть](https://github.com/IceCubeNext/java-explore-with-me/pull/5)
 
-<img title="ER diagram" alt="ER diagram" src="/images/EWM.jpg">
-
 ## Схема базы данных
 
 <img title="ER diagram" alt="ER diagram" src="/images/EWM.jpg">
