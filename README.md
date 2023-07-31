@@ -19,7 +19,7 @@
 
 - Java 11
 - Spring Boot
-- Hibernate
+- Hibernate, Criteria API
 - PostgreSQL 14
 - Maven
 - Lombok, MapStruct
@@ -31,6 +31,18 @@
 
 - [Техническое задание для API основного сервиса](./ewm-main-service-spec.json)
 - [Техническое задание для API сервиса статистики](./ewm-stats-service-spec.json)
+
+## Postman
+
+- [Тесты API основного сервиса](./postman/ewm-main-service.json)
+- [Тесты API сервиса статистики](./postman/ewm-stat-service.json)
+- [Тесты API комментариев (дополнительная функциональность)](./postman/feature.json)
+
+## Ссылка на последний pull-request
+
+[открыть](https://github.com/IceCubeNext/java-explore-with-me/pull/5)
+
+<img title="ER diagram" alt="ER diagram" src="/images/EWM.jpg">
 
 ## Схема базы данных
 

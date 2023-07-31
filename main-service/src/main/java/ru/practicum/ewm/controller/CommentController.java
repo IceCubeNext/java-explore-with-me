@@ -55,7 +55,7 @@ public class CommentController {
     public CommentDto updateComment(@PathVariable Integer eventId,
                                     @PathVariable Integer comId,
                                     @RequestParam Integer userId,
-                                    @RequestBody CommentDto commentDto) {
+                                    @Valid @RequestBody NewCommentDto commentDto) {
         log.info("Patch comment with id={} from user with id={}, under event with id={}, dto={}", comId, userId, eventId, commentDto);
         return commentService.updateComment(userId, eventId, comId, commentDto);
     }

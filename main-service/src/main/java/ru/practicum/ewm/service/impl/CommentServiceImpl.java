@@ -74,7 +74,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDto updateComment(Integer userId, Integer eventId, Integer comId, CommentDto commentDto) {
+    public CommentDto updateComment(Integer userId, Integer eventId, Integer comId, NewCommentDto commentDto) {
         userService.findById(userId);
         Event event = eventService.findById(eventId);
         Comment comment = findById(comId);

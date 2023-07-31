@@ -10,9 +10,12 @@ import ru.practicum.ewm.dto.*;
 import ru.practicum.ewm.exceptions.ConflictException;
 import ru.practicum.ewm.exceptions.NotFoundException;
 import ru.practicum.ewm.mapper.CategoryMapper;
+import ru.practicum.ewm.mapper.CommentMapper;
 import ru.practicum.ewm.mapper.EventMapper;
+import ru.practicum.ewm.model.Comment;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.enums.*;
+import ru.practicum.ewm.repository.CommentRepository;
 import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.RequestRepository;
 import ru.practicum.ewm.service.CategoryService;
@@ -35,7 +38,9 @@ public class EventServiceImpl implements EventService {
     private final UserService userService;
     private final CategoryService categoryService;
     private final RequestRepository requestRepository;
+    private final CommentRepository commentRepository;
     private final CategoryMapper categoryMapper;
+    private final CommentMapper commentMapper;
     private final StatClient statClient;
 
     @Override
@@ -101,6 +106,7 @@ public class EventServiceImpl implements EventService {
         statClient.addHit(new StatRequestDto("ewm-main-service", uri, ip, LocalDateTime.now()));
         EventFullDto eventFullDto = mapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(requestRepository.countAllByEventIdAndStatus(id, Status.CONFIRMED));
+        eventFullDto.setComments(commentRepository.findAllByEventId(id).stream().map(commentMapper::toDto).collect(toList()));
         return eventFullDto;
     }
 
@@ -123,6 +129,7 @@ public class EventServiceImpl implements EventService {
         event.setViews(event.getViews() + 1);
         EventFullDto eventFullDto = mapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(requestRepository.countAllByEventIdAndStatus(eventId, Status.CONFIRMED));
+        eventFullDto.setComments(commentRepository.findAllByEventId(eventId).stream().map(commentMapper::toDto).collect(toList()));
         return eventFullDto;
     }
 
@@ -162,6 +169,7 @@ public class EventServiceImpl implements EventService {
                 event.setConfirmedRequests(0);
             }
         }
+        setComments(eventFullDtoList);
         return eventFullDtoList;
     }
 
@@ -181,7 +189,9 @@ public class EventServiceImpl implements EventService {
         event.setState(Status.PENDING);
         event.setViews(0);
         event.setCreatedOn(LocalDateTime.now());
-        return mapper.toEventFullDto(repository.save(event));
+        EventFullDto eventFullDto = mapper.toEventFullDto(repository.save(event));
+        eventFullDto.setComments(Collections.emptyList());
+        return eventFullDto;
     }
 
     @Override
@@ -208,7 +218,9 @@ public class EventServiceImpl implements EventService {
                 throw new IllegalArgumentException(String.format("Unknown event state: %s", event.getState()));
             }
         }
-        return mapper.toEventFullDto(repository.save(event));
+        EventFullDto eventFullDto = mapper.toEventFullDto(repository.save(event));
+        eventFullDto.setComments(commentRepository.findAllByEventId(eventId).stream().map(commentMapper::toDto).collect(toList()));
+        return eventFullDto;
     }
 
     @Override
@@ -234,8 +246,9 @@ public class EventServiceImpl implements EventService {
                 throw new IllegalArgumentException(String.format("Unknown event state: %s", event.getState()));
             }
         }
-
-        return mapper.toEventFullDto(repository.save(event));
+        EventFullDto eventFullDto = mapper.toEventFullDto(repository.save(event));
+        eventFullDto.setComments(commentRepository.findAllByEventId(eventId).stream().map(commentMapper::toDto).collect(toList()));
+        return eventFullDto;
     }
 
     @Override
@@ -284,6 +297,24 @@ public class EventServiceImpl implements EventService {
         }
         if (eventDto.getRequestModeration() != null && eventDto.getRequestModeration() != event.getRequestModeration()) {
             event.setRequestModeration(eventDto.getRequestModeration());
+        }
+    }
+
+    private void setComments(List<EventFullDto> events) {
+        Map<Integer, List<Comment>> eventComments = commentRepository
+                .findAllByEventIdIn(events.stream().map(EventFullDto::getId).collect(toList()))
+                .stream()
+                .collect(Collectors.groupingBy(c ->
+                                c.getEvent().getId(),
+                        toList())
+                );
+
+        for (EventFullDto event : events) {
+            if (eventComments.containsKey(event.getId())) {
+                event.setComments(eventComments.get(event.getId()).stream().map(commentMapper::toDto).collect(toList()));
+            } else {
+                event.setComments(Collections.emptyList());
+            }
         }
     }
 }
