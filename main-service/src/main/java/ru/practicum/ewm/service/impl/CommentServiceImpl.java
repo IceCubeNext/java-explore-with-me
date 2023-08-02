@@ -15,9 +15,9 @@ import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.User;
 import ru.practicum.ewm.model.enums.Status;
 import ru.practicum.ewm.repository.CommentRepository;
+import ru.practicum.ewm.repository.EventRepository;
+import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.CommentService;
-import ru.practicum.ewm.service.EventService;
-import ru.practicum.ewm.service.UserService;
 
 import java.util.List;
 import java.util.Objects;
@@ -26,15 +26,15 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository repository;
-    private final EventService eventService;
-    private final UserService userService;
+    private final EventRepository eventRepository;
+    private final UserRepository userRepository;
     private final CommentMapper mapper;
 
     @Override
     @Transactional(readOnly = true)
     public CommentDto getCommentById(Integer eventId, Integer comId) {
         Comment comment = findById(comId);
-        Event event = eventService.findById(eventId);
+        Event event = getEvent(eventId);
         if (!Status.PUBLISHED.equals(event.getState())) {
             throw new NotFoundException(String.format("Event with id=%d was not found", eventId));
         }
@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentsByEventId(Integer eventId, String text, Integer from, Integer size) {
         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
-        eventService.findById(eventId);
+        getEvent(eventId);
         return repository.findAllByEventIdAndTextContainingIgnoreCase(eventId, text, page).map(mapper::toDto).getContent();
     }
 
@@ -53,15 +53,15 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentsByUserId(Integer userId, String text, Integer from, Integer size) {
         PageRequest page = PageRequest.of(from > 0 ? from / size : 0, size);
-        userService.findById(userId);
+        getUser(userId);
         return repository.findAllByUserIdAndTextContainingIgnoreCase(userId, text, page).map(mapper::toDto).getContent();
     }
 
     @Override
     @Transactional
     public CommentDto addComment(Integer userId, Integer eventId, NewCommentDto commentDto) {
-        User user = userService.findById(userId);
-        Event event = eventService.findById(eventId);
+        User user = getUser(userId);
+        Event event = getEvent(eventId);
         if (!Status.PUBLISHED.equals(event.getState())) {
             throw new NotFoundException(String.format("Event with id=%d was not found", eventId));
         }
@@ -75,8 +75,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentDto updateComment(Integer userId, Integer eventId, Integer comId, NewCommentDto commentDto) {
-        userService.findById(userId);
-        Event event = eventService.findById(eventId);
+        getUser(userId);
+        Event event = getEvent(eventId);
         Comment comment = findById(comId);
         if (!Status.PUBLISHED.equals(event.getState())) {
             throw new NotFoundException(String.format("Event with id=%d was not found", eventId));
@@ -94,8 +94,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void deleteComment(Integer userId, Integer eventId, Integer comId) {
-        userService.findById(userId);
-        Event event = eventService.findById(eventId);
+        getUser(userId);
+        Event event = getEvent(eventId);
         Comment comment = findById(comId);
         if (!Status.PUBLISHED.equals(event.getState())) {
             throw new NotFoundException(String.format("Event with id=%d was not found", eventId));
@@ -106,8 +106,25 @@ public class CommentServiceImpl implements CommentService {
         repository.deleteById(comId);
     }
 
+    @Override
+    @Transactional
+    public void deleteCommentByAdmin(Integer comId) {
+        findById(comId);
+        repository.deleteById(comId);
+    }
+
     private Comment findById(Integer comId) {
         return repository.findById(comId)
                 .orElseThrow(() -> new NotFoundException(String.format("Comment with id=%d was not found", comId)));
+    }
+
+    private User getUser(Integer userId) {
+        return userRepository.findById(userId).orElseThrow(()
+                -> new NotFoundException(String.format("User with id=%d was not found", userId)));
+    }
+
+    private Event getEvent(Integer eventId) {
+        return eventRepository.findById(eventId).orElseThrow(()
+                -> new NotFoundException(String.format("Event with id=%d was not found", eventId)));
     }
 }

@@ -69,4 +69,10 @@ public class CommentController {
         commentService.deleteComment(userId, eventId, comId);
     }
 
+    @DeleteMapping("admin/comments/{comId}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void deleteCommentByAdmin(@RequestParam Integer comId) {
+        log.info("Delete comment with id={} by admin", comId);
+        commentService.deleteCommentByAdmin(comId);
+    }
 }
