@@ -7,6 +7,7 @@ import ru.practicum.ewm.model.enums.Status;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -40,4 +41,5 @@ public class EventFullDto {
     private Boolean requestModeration;
     private Status state;
     private Integer views;
+    private List<CommentDto> comments;
 }
